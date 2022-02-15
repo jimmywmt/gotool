@@ -17,7 +17,7 @@ type SlackRequestBody struct {
 	Text string `json:"text"`
 }
 
-func NewSlackWebHook(url string) *Slackwebhook {
+func NewSlackWebhook(url string) *Slackwebhook {
 	return &Slackwebhook{url: url}
 }
 func (slackwebhook *Slackwebhook) SentMessage(message string) {
