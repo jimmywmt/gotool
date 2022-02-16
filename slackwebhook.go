@@ -31,6 +31,7 @@ func (slackwebhook *Slackwebhook) SentMessage(message string) {
 
 	client := &http.Client{Timeout: 10 * time.Second}
 	resp, err := client.Do(req)
+	defer resp.Body.Close()
 	if err != nil {
 		log.WithError(err).Warnln("connection failed")
 	}
@@ -40,5 +41,4 @@ func (slackwebhook *Slackwebhook) SentMessage(message string) {
 	if buf.String() != "ok" {
 		log.WithError(err).Warnln("non-ok response returned from Slack")
 	}
-	defer resp.Body.Close()
 }
