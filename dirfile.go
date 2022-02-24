@@ -8,7 +8,7 @@ import (
 )
 
 func DirRegListFiles(path string, findreg string) []*string {
-	list := make([]string, 0)
+	list := make([]*string, 0)
 	reg, _ := regexp.Compile(findreg)
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
@@ -20,16 +20,16 @@ func DirRegListFiles(path string, findreg string) []*string {
 
 	for _, file := range files {
 		filename := file.Name()
-		if !file.IsDir() && reg.Match(filename) {
-			list = append(list, file.Name())
+		if !file.IsDir() && reg.MatchString(filename) {
+			list = append(list, &filename)
 		}
 	}
 
-	return &list
+	return list
 }
 
 func DirRegListDirs(path string, findreg string) []*string {
-	list := make([]string, 0)
+	list := make([]*string, 0)
 	reg, _ := regexp.Compile(findreg)
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
@@ -41,10 +41,10 @@ func DirRegListDirs(path string, findreg string) []*string {
 
 	for _, file := range files {
 		filename := file.Name()
-		if file.IsDir() && reg.Match(filename) {
-			list = append(list, file.Name())
+		if file.IsDir() && reg.MatchString(filename) {
+			list = append(list, &filename)
 		}
 	}
 
-	return &list
+	return list
 }
