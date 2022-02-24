@@ -31,10 +31,10 @@ func (slackwebhook *Slackwebhook) SentMessage(message string) {
 
 	client := &http.Client{Timeout: 10 * time.Second}
 	resp, err := client.Do(req)
-	defer resp.Body.Close()
 	if err != nil {
 		log.WithError(err).Warnln("connection failed")
 	}
+	defer resp.Body.Close()
 
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(resp.Body)
