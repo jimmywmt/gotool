@@ -24,9 +24,8 @@ func DirRegListFiles(path string, findReg string) []*string {
 	}
 
 	for _, file := range files {
-		fileName := file.Name()
-		if !file.IsDir() && reg.MatchString(fileName) {
-			fileName = path + fileName
+		if !file.IsDir() && reg.MatchString(file.Name()) {
+			fileName := path + file.Name()
 			list = append(list, &fileName)
 		}
 	}
@@ -51,9 +50,8 @@ func DirRegListDirs(path string, findReg string) []*string {
 	}
 
 	for _, file := range files {
-		fileName := file.Name()
-		if file.IsDir() && reg.MatchString(fileName) {
-			fileName = path + fileName
+		if file.IsDir() && reg.MatchString(file.Name()) {
+			fileName := path + file.Name()
 			list = append(list, &fileName)
 		}
 	}
