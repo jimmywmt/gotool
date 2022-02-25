@@ -19,7 +19,7 @@ func DirRegListFiles(path string, findReg string) []*string {
 	}
 
 	reg2, _ := regexp.Compile("/$")
-	if reg2.MatchString(path) {
+	if !reg2.MatchString(path) {
 		path = path + "/"
 	}
 
@@ -45,7 +45,7 @@ func DirRegListDirs(path string, findReg string) []*string {
 	}
 
 	reg2, _ := regexp.Compile("/$")
-	if reg2.MatchString(path) {
+	if !reg2.MatchString(path) {
 		path = path + "/"
 	}
 
