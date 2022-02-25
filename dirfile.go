@@ -7,9 +7,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func DirRegListFiles(path string, findreg string) []*string {
+func DirRegListFiles(path string, findReg string) []*string {
 	list := make([]*string, 0)
-	reg, _ := regexp.Compile(findreg)
+	reg, _ := regexp.Compile(findReg)
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		log.WithFields(log.Fields{
@@ -18,19 +18,24 @@ func DirRegListFiles(path string, findreg string) []*string {
 		return nil
 	}
 
+	reg2, _ := regexp.Compile("/$")
+	if reg2.MatchString(path) {
+		path = path + "/"
+	}
+
 	for _, file := range files {
-		filename := file.Name()
-		if !file.IsDir() && reg.MatchString(filename) {
-			list = append(list, &filename)
+		fileName := path + file.Name()
+		if !file.IsDir() && reg.MatchString(fileName) {
+			list = append(list, &fileName)
 		}
 	}
 
 	return list
 }
 
-func DirRegListDirs(path string, findreg string) []*string {
+func DirRegListDirs(path string, findReg string) []*string {
 	list := make([]*string, 0)
-	reg, _ := regexp.Compile(findreg)
+	reg, _ := regexp.Compile(findReg)
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		log.WithFields(log.Fields{
@@ -39,10 +44,15 @@ func DirRegListDirs(path string, findreg string) []*string {
 		return nil
 	}
 
+	reg2, _ := regexp.Compile("/$")
+	if reg2.MatchString(path) {
+		path = path + "/"
+	}
+
 	for _, file := range files {
-		filename := file.Name()
-		if file.IsDir() && reg.MatchString(filename) {
-			list = append(list, &filename)
+		fileName := path + file.Name()
+		if file.IsDir() && reg.MatchString(fileName) {
+			list = append(list, &fileName)
 		}
 	}
 
