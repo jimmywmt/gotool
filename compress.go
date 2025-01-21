@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/klauspost/compress/zstd"
-	log "github.com/sirupsen/logrus"
 )
 
 func Compress(src *string, buf io.Writer) error {
@@ -62,13 +61,13 @@ func Compress(src *string, buf io.Writer) error {
 	return nil
 }
 
-func CompressFolder(today string) {
+func CompressFolder(today string) error {
 	path := "csv/" + today
 	zstdFile := path + ".tar.zst"
 	var buf bytes.Buffer
 	err := Compress(&path, &buf)
 	if err != nil {
-		log.WithError(err).Warnln("壓縮資料失敗")
+		return err
 	} else {
 		fileToWrite, err := os.OpenFile(zstdFile, os.O_CREATE|os.O_RDWR, os.FileMode(0644))
 		if err != nil {
@@ -79,10 +78,8 @@ func CompressFolder(today string) {
 		}
 		fileToWrite.Close()
 		os.RemoveAll(path)
-		log.WithFields(log.Fields{
-			"file": path + ".tar.zst",
-		}).Infoln("壓縮資料成功")
 	}
+	return nil
 }
 
 func Uncompress(src io.Reader) error {
@@ -124,18 +121,15 @@ func Uncompress(src io.Reader) error {
 	return nil
 }
 
-func UncompressFolder(fileName *string) {
+func UncompressFolder(fileName *string) error {
 	reg, _ := regexp.Compile("[0-9]...-[0-1][0-9]-[0-3][0-9]")
 	date := reg.FindString(*fileName)
-	log.WithFields(log.Fields{
-		"dir": "./" + date,
-	}).Infoln("解壓資料")
 	file, err := os.Open(*fileName)
-	if err != nil {
-		log.WithError(err).Warnln("解壓資料失敗")
+	if err == nil {
+		err = Uncompress(file)
 	}
-	err = Uncompress(file)
 	if err != nil {
-		log.WithError(err).Warnln("解壓資料失敗")
+		return err
 	}
+	return nil
 }

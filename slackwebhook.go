@@ -3,10 +3,9 @@ package gotool
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"time"
-
-	log "github.com/sirupsen/logrus"
 )
 
 type Slackwebhook struct {
@@ -20,11 +19,11 @@ type SlackRequestBody struct {
 func NewSlackWebhook(url string) *Slackwebhook {
 	return &Slackwebhook{url: url}
 }
-func (slackwebhook *Slackwebhook) SentMessage(message string) {
+func (slackwebhook *Slackwebhook) SentMessage(message string) error {
 	slackBody, _ := json.Marshal(SlackRequestBody{Text: message})
 	req, err := http.NewRequest("POST", slackwebhook.url, bytes.NewBuffer(slackBody))
 	if err != nil {
-		log.WithError(err).Warnln("connection failed")
+		return err
 	}
 
 	req.Header.Add("Content-Type", "application/json")
@@ -32,13 +31,14 @@ func (slackwebhook *Slackwebhook) SentMessage(message string) {
 	client := &http.Client{Timeout: 10 * time.Second}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.WithError(err).Warnln("connection failed")
+		return err
 	}
 	defer resp.Body.Close()
 
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(resp.Body)
 	if buf.String() != "ok" {
-		log.WithError(err).Warnln("non-ok response returned from Slack")
+		return errors.New("non-ok response returned from Slack")
 	}
+	return nil
 }

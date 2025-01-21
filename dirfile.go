@@ -3,19 +3,14 @@ package gotool
 import (
 	"io/ioutil"
 	"regexp"
-
-	log "github.com/sirupsen/logrus"
 )
 
-func DirRegListFiles(path string, findReg string) []*string {
+func DirRegListFiles(path string, findReg string) []*string, error {
 	list := make([]*string, 0)
 	reg, _ := regexp.Compile(findReg)
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"path": path,
-		}).Errorln("open dir failed")
-		return nil
+		return nil, err
 	}
 
 	reg2, _ := regexp.Compile("/$")
@@ -30,18 +25,15 @@ func DirRegListFiles(path string, findReg string) []*string {
 		}
 	}
 
-	return list
+	return list, nil
 }
 
-func DirRegListDirs(path string, findReg string) []*string {
+func DirRegListDirs(path string, findReg string) []*string, error {
 	list := make([]*string, 0)
 	reg, _ := regexp.Compile(findReg)
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		log.WithFields(log.Fields{
-			"path": path,
-		}).Errorln("open dir failed")
-		return nil
+		return nil, err
 	}
 
 	reg2, _ := regexp.Compile("/$")
@@ -56,5 +48,5 @@ func DirRegListDirs(path string, findReg string) []*string {
 		}
 	}
 
-	return list
+	return list, nil
 }
