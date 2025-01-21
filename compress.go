@@ -6,7 +6,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 
 	"github.com/klauspost/compress/zstd"
@@ -122,8 +121,6 @@ func Uncompress(src io.Reader) error {
 }
 
 func UncompressFolder(fileName *string) error {
-	reg, _ := regexp.Compile("[0-9]...-[0-1][0-9]-[0-3][0-9]")
-	date := reg.FindString(*fileName)
 	file, err := os.Open(*fileName)
 	if err == nil {
 		err = Uncompress(file)
