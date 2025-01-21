@@ -5,7 +5,7 @@ import (
 	"regexp"
 )
 
-func DirRegListFiles(path string, findReg string) []*string, error {
+func DirRegListFiles(path string, findReg string) ([]*string, error) {
 	list := make([]*string, 0)
 	reg, _ := regexp.Compile(findReg)
 	files, err := ioutil.ReadDir(path)
@@ -28,7 +28,7 @@ func DirRegListFiles(path string, findReg string) []*string, error {
 	return list, nil
 }
 
-func DirRegListDirs(path string, findReg string) []*string, error {
+func DirRegListDirs(path string, findReg string) ([]*string, error) {
 	list := make([]*string, 0)
 	reg, _ := regexp.Compile(findReg)
 	files, err := ioutil.ReadDir(path)
